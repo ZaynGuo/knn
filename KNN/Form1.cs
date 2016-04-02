@@ -54,7 +54,8 @@ namespace KNN
                         SIM[trainingobj] = new KNNLib.KNN(ref training_set, ref test_obj, 3).KNNCluster();
                         dic.Add(trainingobj, SIM[trainingobj]);
                         // System.Console.WriteLine("No." + trainingobj + " sim " + SIM[trainingobj]);
-                    } trainingobj++;
+                    } 
+                    trainingobj++;
                 }
                 dic.OrderBy(o => o.Value);
                 int[] simobj = dic.Keys.ToArray();
