@@ -1,18 +1,17 @@
-﻿using System.Collections;
+﻿using KNNLib;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing.Imaging;
-using System.Data.SqlClient;
-using System.IO;
-
-using KNNLib;
 
 namespace KNN
 {
@@ -37,25 +36,39 @@ namespace KNN
         private void button1_Click(object sender, EventArgs e)
         {
             double[] SIM = new double[1800];
-            int testobj = 28;
-            SIM[testobj] = 100;////豪斯多夫改为0，最近邻改为100
-            int trainingobj=0;
-            ArrayList Q = combinelist(testobj);
-            Obj[] test_obj = (Obj[])Q.ToArray(typeof(Obj));
-            while (trainingobj<79)
+            for (int testobj = 0; testobj < 79; testobj++)
             {
-                if (trainingobj != testobj)
-                {
-                    ArrayList P = combinelist(trainingobj);
-                    Obj[] training_set = (Obj[])P.ToArray(typeof(Obj));
-                    SIM[trainingobj] = new KNNLib.KNN(ref training_set, ref test_obj, 3).KNNCluster();
-                    System.Console.WriteLine("No." + trainingobj + " sim " + SIM[trainingobj]);
-                } trainingobj++;
-            }
-            int  classnum = simprocess(SIM);
 
-            System.Console.WriteLine(classnum);
-           
+
+                SIM[testobj] = 100;////豪斯多夫改为0，最近邻改为100
+                int trainingobj = 0;
+                ArrayList Q = combinelist(testobj);
+                Obj[] test_obj = (Obj[])Q.ToArray(typeof(Obj));
+                Dictionary<int, double> dic = new Dictionary<int, double>();
+                while (trainingobj < 79)
+                {
+                    if (trainingobj != testobj)
+                    {
+                        ArrayList P = combinelist(trainingobj);
+                        Obj[] training_set = (Obj[])P.ToArray(typeof(Obj));
+                        SIM[trainingobj] = new KNNLib.KNN(ref training_set, ref test_obj, 3).KNNCluster();
+                        dic.Add(trainingobj, SIM[trainingobj]);
+                        // System.Console.WriteLine("No." + trainingobj + " sim " + SIM[trainingobj]);
+                    } trainingobj++;
+                }
+                dic.OrderBy(o => o.Value);
+                int[] simobj = dic.Keys.ToArray();
+                //for (int i = 0; i < simobj.Length; i++)
+                //{
+                //    System.Console.WriteLine(simobj[i]);
+                //}
+
+                int classnum = simprocess(SIM);
+
+                System.Console.WriteLine(classnum);
+                
+
+            }
         }
 
         public int simprocess(double[] sim){
@@ -97,7 +110,7 @@ namespace KNN
             double[] temporary = new double[1000];
             int objnum = combinenum % 10;
             int classnum = combinenum / 10;
-            System.Console.WriteLine(classnum +"x"+ objnum);
+          //  System.Console.WriteLine(classnum +"x"+ objnum);
             int picnum = 0;
             ArrayList M = new ArrayList();
             while (picnum < 41)
