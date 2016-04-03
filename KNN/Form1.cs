@@ -36,40 +36,57 @@ namespace KNN
         private void button1_Click(object sender, EventArgs e)
         {
             double[] SIM = new double[1800];
-            for (int testobj = 0; testobj < 79; testobj++)
+            
+            for (int testobj = 0; testobj < 80; testobj++)
             {
-
-
-                SIM[testobj] = 100;////豪斯多夫改为0，最近邻改为100
+                //int testobj=1;
+                //  SIM[testobj] = 100;////豪斯多夫改为0，最近邻改为100
                 int trainingobj = 0;
                 ArrayList Q = combinelist(testobj);
                 Obj[] test_obj = (Obj[])Q.ToArray(typeof(Obj));
-                Dictionary<int, double> dic = new Dictionary<int, double>();
+                SortedList<double, int> sortedList = new SortedList<double, int>();
                 while (trainingobj < 80)
                 {
-                    if (trainingobj != testobj)
-                    {
-                        ArrayList P = combinelist(trainingobj);
-                        Obj[] training_set = (Obj[])P.ToArray(typeof(Obj));
-                        SIM[trainingobj] = new KNNLib.KNN(ref training_set, ref test_obj, 3).KNNCluster();
-                        dic.Add(trainingobj, SIM[trainingobj]);
-                        // System.Console.WriteLine("No." + trainingobj + " sim " + SIM[trainingobj]);
-                    } 
+                    ArrayList P = combinelist(trainingobj);
+                    Obj[] training_set = (Obj[])P.ToArray(typeof(Obj));
+                    SIM[trainingobj] = new KNNLib.KNN(ref training_set, ref test_obj, 3).KNNCluster();
+                    sortedList.Add(SIM[trainingobj], trainingobj);
+                    // System.Console.WriteLine("No." + trainingobj + " sim " + SIM[trainingobj]);
+                    //} 
                     trainingobj++;
                 }
-                dic.OrderBy(o => o.Value);
-                int[] simobj = dic.Keys.ToArray();
-                //for (int i = 0; i < simobj.Length; i++)
-                //{
-                //    System.Console.WriteLine(simobj[i]);
-                //}
 
-                int classnum = simprocess(SIM);
+
+                foreach (var x in sortedList)
+                {
+                    Console.WriteLine(x.Key + "  " + x.Value);
+                }
+
+                int classnum = testobj / 10;
+                //  int classnum = simprocess(SIM);
+
+                StreamWriter sw = File.AppendText("D:\\4.txt");
+                foreach (var item in sortedList)
+                {
+                    
+                    int x = item.Value / 10;
+                    if (x == classnum)
+                    {
+                        string w = 1 + " ";
+                        sw.Write(w);
+                    }
+                    else
+                    {
+                        string w = 0 + " ";
+                        sw.Write(w);
+                    }
+                }
+                sw.Write("\r\n");
 
                 System.Console.WriteLine(classnum);
-                
-
-            }
+             sw.Close();
+            }/////
+          
         }
 
         public int simprocess(double[] sim){
@@ -80,7 +97,7 @@ namespace KNN
             {
                 double [] sim2 = SplitArray(sim, StartIndex, EndIndex);
                  sim2 = sim2.OrderBy(x => x).ToArray();
-                 classsim[i] = sim2[0];//////豪斯多夫改为sim2[9],最近邻改为sim2[0]
+                 classsim[i] = sim2[9];//////豪斯多夫改为sim2[9],最近邻改为sim2[0]
                 StartIndex += 10;
                 EndIndex += 10;
             }
@@ -88,7 +105,7 @@ namespace KNN
             double a = classsim.Min();
 
             int classnum = Array.IndexOf(classsim, a);
-            return classnum+1;
+            return classnum;
         }
 
         public double[] SplitArray(double[] Source, int StartIndex, int EndIndex)

@@ -66,7 +66,6 @@ namespace KNNLib
             for (int j = 0; j < training_set.Length;j++ )
             {
                 this.SimCalc(test_obj[j]);
-                Dictionary<string, int> class_counter = new Dictionary<string, int>();
                 Obj[] query = this.training_set.OrderBy(obj => obj.Sim).ToArray();
                 n[i] = query[0].Sim;
                 i++;
