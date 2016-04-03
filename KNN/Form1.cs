@@ -45,7 +45,7 @@ namespace KNN
                 ArrayList Q = combinelist(testobj);
                 Obj[] test_obj = (Obj[])Q.ToArray(typeof(Obj));
                 Dictionary<int, double> dic = new Dictionary<int, double>();
-                while (trainingobj < 79)
+                while (trainingobj < 80)
                 {
                     if (trainingobj != testobj)
                     {
@@ -96,7 +96,7 @@ namespace KNN
             try
             {
                 double[] result = new double[EndIndex - StartIndex + 1];
-                for (int i = 0; i < EndIndex - StartIndex; i++) result[i] = Source[i + StartIndex];
+                for (int i = 0; i < EndIndex - StartIndex+1; i++) result[i] = Source[i + StartIndex];
                 return result;
             }
             catch (IndexOutOfRangeException ex)
