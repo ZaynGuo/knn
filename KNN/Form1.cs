@@ -55,38 +55,36 @@ namespace KNN
                     //} 
                     trainingobj++;
                 }
-
-
+                int[] n = sortedList.Values.ToArray();
+                int simobj = n[0];
                 foreach (var x in sortedList)
                 {
-                    Console.WriteLine(x.Key + "  " + x.Value);
+                   // Console.WriteLine(x.Key + "  " + x.Value);
                 }
 
-                int classnum = testobj / 10;
-                //  int classnum = simprocess(SIM);
+                int classnum = simobj / 10;
+             
+                //StreamWriter sw = File.AppendText("D:\\5.txt");
+                //foreach (var item in sortedList)
+                //{
 
-                StreamWriter sw = File.AppendText("D:\\4.txt");
-                foreach (var item in sortedList)
-                {
-                    
-                    int x = item.Value / 10;
-                    if (x == classnum)
-                    {
-                        string w = 1 + " ";
-                        sw.Write(w);
-                    }
-                    else
-                    {
-                        string w = 0 + " ";
-                        sw.Write(w);
-                    }
-                }
-                sw.Write("\r\n");
+                //    int x = item.Value / 10;
+                //    if (x == classnum)
+                //    {
+                //        string w = 1 + " ";
+                //        sw.Write(w);
+                //    }
+                //    else
+                //    {
+                //        string w = 0 + " ";
+                //        sw.Write(w);
+                //    }
+                //}
+                //sw.Write("\r\n");
 
-                System.Console.WriteLine(classnum);
-             sw.Close();
-            }/////
-          
+                System.Console.WriteLine(simobj + "xxxx");
+            //sw.Close();
+            }
         }
 
         public int simprocess(double[] sim){

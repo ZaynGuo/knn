@@ -33,25 +33,25 @@ namespace KNNLib
         /// 测试样本，可不赋值
         /// 若不赋值，务必使用有参数的主函数
         /// </summary>
-        private Obj[] test_obj;
+        private Obj[] test_pic;
         public Obj[] Test_obj
         {
             set
             {
-                this.test_obj = value;
+                this.test_pic = value;
             }
         }
 
         /// <summary>
         /// 构建函数
         /// </summary>
-        /// <param name="training_set"></param>
+        /// <param name="training_set_pic"></param>
         /// <param name="test_obj"></param>
         /// <param name="k"></param>
-        public KNN(ref Obj[] training_set, ref Obj[] test_obj, int k)
+        public KNN(ref Obj[] training_set_pic, ref Obj[] test_obj, int k)
         {
-            this.training_set = training_set;
-            this.test_obj = test_obj;
+            this.training_set = training_set_pic;
+            this.test_pic = test_obj;
             this.k = k;
         }
 
@@ -63,16 +63,15 @@ namespace KNNLib
         {
             double [ ]n =new double [training_set.Length];
             int i = 0;
-            for (int j = 0; j < training_set.Length;j++ )
+            for (int j = 0; j < test_pic.Length; j++)
             {
-                this.SimCalc(test_obj[j]);
+                this.SimCalc(test_pic[j]);
                 Obj[] query = this.training_set.OrderBy(obj => obj.Sim).ToArray();
-                n[i] = query[0].Sim;
+                n[i] = query[query.Length-1].Sim;/////一张图片和41张图片比较，取出这41张图片的最大差值
                 i++;
-               
             }
-            double[] m = n.OrderBy(x => x).ToArray();
-            return m[0];
+             n = n.OrderBy(x => x).ToArray();/////将测试物体的41张图片的最大差值比较，再次取出最大值
+            return n[n.Length-1];
         }
 
        
