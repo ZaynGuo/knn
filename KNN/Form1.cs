@@ -44,46 +44,52 @@ namespace KNN
                 int trainingobj = 0;
                 ArrayList Q = combinelist(testobj);
                 Obj[] test_obj = (Obj[])Q.ToArray(typeof(Obj));
-                SortedList<double, int> sortedList = new SortedList<double, int>();
+                SortedList<double,int> sortedlist=new SortedList<double,int>();
+                Dictionary<int, double> dic = new Dictionary<int, double>();
                 while (trainingobj < 80)
                 {
                     ArrayList P = combinelist(trainingobj);
                     Obj[] training_set = (Obj[])P.ToArray(typeof(Obj));
                     SIM[trainingobj] = new KNNLib.KNN(ref training_set, ref test_obj, 3).KNNCluster();
-                    sortedList.Add(SIM[trainingobj], trainingobj);
-                    // System.Console.WriteLine("No." + trainingobj + " sim " + SIM[trainingobj]);
+                 //   System.Console.WriteLine("No." + trainingobj + " sim " + SIM[trainingobj]);
+                    sortedlist.Add( SIM[trainingobj],trainingobj);                 
+                    // dic.Add(trainingobj, SIM[trainingobj]);
+                    
                     //} 
                     trainingobj++;
                 }
-                int[] n = sortedList.Values.ToArray();
+              //  Dictionary<int, double> dic1Asc = dic.OrderBy(o => o.Key).ToDictionary(o => o.Key, p => p.Value);
+                // = dic.OrderBy(x => x.Value).Keys.ToArray();
+               // int[] n = dic1Asc.Keys.ToArray(); 
+                int[] n = sortedlist.Values.ToArray();   
                 int simobj = n[0];
-                foreach (var x in sortedList)
-                {
-                   // Console.WriteLine(x.Key + "  " + x.Value);
-                }
+                //foreach (var x in sortedlist)
+                //{
+                //  //  Console.WriteLine(x.Key + "  " + x.Value);
+                //}
 
                 int classnum = simobj / 10;
-             
-                //StreamWriter sw = File.AppendText("D:\\5.txt");
-                //foreach (var item in sortedList)
-                //{
 
-                //    int x = item.Value / 10;
-                //    if (x == classnum)
-                //    {
-                //        string w = 1 + " ";
-                //        sw.Write(w);
-                //    }
-                //    else
-                //    {
-                //        string w = 0 + " ";
-                //        sw.Write(w);
-                //    }
-                //}
-                //sw.Write("\r\n");
+                StreamWriter sw = File.AppendText("D:\\haus+zernike22.txt");
+                foreach (var item in sortedlist)
+                {
 
-                System.Console.WriteLine(simobj + "xxxx");
-            //sw.Close();
+                    int x = item.Value / 10;
+                    if (x == classnum)
+                    {
+                        string w = 1 + " ";
+                        sw.Write(w);
+                    }
+                    else
+                    {
+                        string w = 0 + " ";
+                        sw.Write(w);
+                    }
+                }
+                sw.Write("\r\n");
+
+                System.Console.WriteLine(classnum + "xxxx");
+                sw.Close();
             }
         }
 

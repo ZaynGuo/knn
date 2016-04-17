@@ -61,17 +61,28 @@ namespace KNNLib
         /// <returns></returns>
         public double KNNCluster()
         {
-            double [ ]n =new double [training_set.Length];
-            int i = 0;
+            
             for (int j = 0; j < test_pic.Length; j++)
             {
-                this.SimCalc(test_pic[j]);
-                Obj[] query = this.training_set.OrderBy(obj => obj.Sim).ToArray();
-                n[i] = query[query.Length-1].Sim;/////一张图片和41张图片比较，取出这41张图片的最大差值
-                i++;
+                test_pic[j].Sim = this.testSimcalc(test_pic[j]);
             }
-             n = n.OrderBy(x => x).ToArray();/////将测试物体的41张图片的最大差值比较，再次取出最大值
-            return n[n.Length-1];
+            Obj[] querytest = this.test_pic.OrderBy(obj => obj.Sim).ToArray();
+             double n  = querytest[test_pic.Length-1].Sim;
+             //Console.WriteLine(n);
+              
+            for (int l = 0; l < training_set.Length; l++)
+            {
+                training_set[l].Sim = this.trainSimcalc(training_set[l]);
+
+            }
+            Obj[] querytrain = this.training_set.OrderBy(obj => obj.Sim).ToArray();
+            double m = querytrain[querytrain.Length-1].Sim;
+            //Console.WriteLine("m"+m+"n"+n);
+                if (m> n)
+                    return m;
+                else
+                    return n;
+                
         }
 
        
@@ -80,12 +91,27 @@ namespace KNNLib
         /// 令测试样本与所有训练集计算距离
         /// 这里把距离计算延迟给了属性值对象
         /// </summary>
-        private void SimCalc(Obj obj)
+        private  double  testSimcalc(Obj obj)
         {
+            double[] n = new double[training_set.Length];
             for (int i = 0; i < training_set.Length; i++)
             {
-                this.training_set[i].Sim = this.training_set[i].Attributes.Sim(obj.Attributes);
+              n[i] = this.training_set[i].Attributes.Sim(obj.Attributes);
+               
             }
+            n = n.OrderBy(x => x).ToArray();
+            return n[0];
+
+        }
+        private double trainSimcalc(Obj obj)
+        {
+            double[] n = new double[test_pic.Length];
+            for (int i = 0; i < test_pic.Length; i++)
+            {
+                n[i] = this.test_pic[i].Attributes.Sim(obj.Attributes);
+            }
+            n = n.OrderBy(x => x).ToArray();
+            return n[0];
         }
     }
 }
